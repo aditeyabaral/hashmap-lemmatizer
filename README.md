@@ -4,4 +4,5 @@ A simple lemmatizer made as a part of the Data Structures (UE18CS202) course at 
 # Execution
 ```
 gcc HashMapLemma.c
+./a.out
 ```
