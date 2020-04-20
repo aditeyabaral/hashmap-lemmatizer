@@ -39,9 +39,10 @@ int main()
     GRAPH *graph = (GRAPH*)malloc(sizeof(GRAPH));
     init(graph);
     create_graph(graph);
+    //display(graph);
     char s[20];
     printf("Enter word : ");
-    scanf("%s", &s);
+    scanf("%s", s);
     char *lemma = lemmatise(graph,s);
     printf("Lemma : %s\n",lemma);
 }
@@ -83,29 +84,32 @@ void create_graph(GRAPH *graph)
         token = strtok(NULL,",");
         while(token!=NULL)
         {
-            NODE *node = (NODE*)malloc(sizeof(NODE));
-            strcpy(node->word,token);
-            node->lemma = l;
-            node->next = NULL;
-            FIRST *pres = graph->head;
-            while(pres->ch!=x)
-                pres = pres->down;
-            if (pres->next==NULL)
-            {
-                LIST *l = (LIST*)malloc(sizeof(LIST));
-                l->head = node;
-                pres->next = node;
-            }
-            else
-            {
-                NODE *cur = pres->next;
-                NODE *prev = NULL;
-                while(cur!=NULL)
+        	if (strlen(token)>2)
+        	{
+                NODE *node = (NODE*)malloc(sizeof(NODE));
+                strcpy(node->word,token);
+                node->lemma = l;
+                node->next = NULL;
+                FIRST *pres = graph->head;
+                while(pres->ch!=x)
+                    pres = pres->down;
+                if (pres->next==NULL)
                 {
-                    prev = cur;
-                    cur = cur->next;
+                    LIST *l = (LIST*)malloc(sizeof(LIST));
+                    l->head = node;
+                    pres->next = node;
                 }
-                prev->next = node;
+                else
+                {
+                    NODE *cur = pres->next;
+                    NODE *prev = NULL;
+                    while(cur!=NULL)
+                    {
+                        prev = cur;
+                        cur = cur->next;
+                    }
+                    prev->next = node;
+                }
             }
             token = strtok(NULL,",");
         }
@@ -121,9 +125,10 @@ void display(GRAPH *graph)
         NODE *pres = node->next;
         while(pres!=NULL)
         {
-            printf("%s->%s\n",pres->word,pres->lemma);
+            printf("%s->%s\n",pres->word,pres->lemma->word);
             pres = pres->next;
         }
+        printf("\n");
         node = node->down;
     }
 }
